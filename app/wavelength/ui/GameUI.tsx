@@ -40,9 +40,14 @@ const GameUI = () => {
   return (
     <div className="flex flex-col gap-1 items-start">
       <h1>WAVELENGTH</h1>
-      <h2>Category: {game.getCurrentCategory().category}</h2>
+      {game.getCurrentCategory() && (
+        <div>
+          <h2>Category: {game.getCurrentCategory().category} | 1: {game.getCurrentCategory().minLabel} -{">"} 10:{" "}
+            {game.getCurrentCategory().maxLabel}</h2>
+        </div>
+      )}
 
-      <div className="flex flex-row gap-2">
+      {game.getCurrentTarget() != 0 && <div className="flex flex-row gap-2">
         <h2>
           Target Number:{" "}
           {isShowingTargetNumber ? game.getCurrentTarget() : "___"}
@@ -54,11 +59,11 @@ const GameUI = () => {
         >
           {isShowingTargetNumber ? "Hide" : "Show"} Target Number
         </button>
-      </div>
+      </div>}
 
       {players.length > 0 && <h2>Host: {game.getHost().getName()}</h2>}
 
-      <div className="flex flex-row gap-2">
+      {game.getCurrentCategory() && <div className="flex flex-row gap-2">
         <p>Selected Word: </p>
         <input
           type="text"
@@ -66,7 +71,7 @@ const GameUI = () => {
           onChange={(e) => game.setSelectedWord(e.target.value)}
           placeholder="Input Here"
         />
-      </div>
+      </div>}
 
       <div className="flex flex-col gap-4 py-4">
         {players.map((player) => (
@@ -103,14 +108,14 @@ const GameUI = () => {
         Start New Round
       </button>
 
-      <button
+      {game.getCurrentCategory() && <button
         className="className = hover:underline hover:cursor-pointer"
         onClick={() => {
           handleEndGame();
         }}
       >
         Submit Number Choices
-      </button>
+      </button>}
 
       <input
         type="text"
