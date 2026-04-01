@@ -1,3 +1,6 @@
+/** 
+ * @param {duration} in seconds
+*/
 export class Timer {
   private duration: number;
   private remaining: number;
