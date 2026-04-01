@@ -40,7 +40,7 @@ const GameUI = () => {
   return (
     <div className="flex flex-col gap-1 items-start">
       <h1>WAVELENGTH</h1>
-      <h2>Category: {game.getCurrentCategory()}</h2>
+      <h2>Category: {game.getCurrentCategory().category}</h2>
 
       <div className="flex flex-row gap-2">
         <h2>

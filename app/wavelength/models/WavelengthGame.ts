@@ -6,12 +6,13 @@ import {
   getGuessPoints,
   getHostPoints,
 } from "../logic/gameLogic";
+import { WavelengthCategory } from "../data/categories";
 
 // TODO: Implement timer once connected web sockets
 export class WavelengthGame {
   private players: WavelengthPlayer[] = [];
   private hostIndex = 0;
-  private currentCategory: string = "";
+  private currentCategory!: WavelengthCategory;
   private currentTarget: number = 0;
   private selectedWord: string = ""; // Only for host
   private guessedNumbers: number[] = []; // I want to display all gussed numbers on the spectrum at the end
@@ -60,6 +61,8 @@ export class WavelengthGame {
     return true;
   }
 
+  // TODO: Implement removePlayer e.g. when kicked by room host
+
   setSelectedWord(word: string) {
     this.selectedWord = word;
   }
@@ -76,7 +79,7 @@ export class WavelengthGame {
     return this.players;
   }
 
-  getCurrentCategory(): string {
+  getCurrentCategory(): WavelengthCategory {
     return this.currentCategory;
   }
 

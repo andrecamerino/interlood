@@ -1,5 +1,5 @@
 import { getRandomInt } from "@/utils/getRandom";
-import { categories } from "../data/categories";
+import { categories, WavelengthCategory } from "../data/categories";
 
 const MIN_NUMBER = 1;
 const MAX_NUMBER = 10;
@@ -29,7 +29,7 @@ export function getHostPoints(playerPoints: number[]): number {
   return Math.round(average);
 }
 
-export function getCategory(): string {
+export function getCategory(): WavelengthCategory {
   const randomIndex = getRandomInt(0, categories.length - 1);
   return categories[randomIndex];
 }
