@@ -1,14 +1,14 @@
 export const categories: string[] = [
   "Ice Cream Flavours",
-  "Seasons",
+  "Months of the Year",
   "Pizza Toppings",
   "Holiday Destinations",
-  "Superhero Teams",
   "Snack Brands",
   "Vacation Styles",
   "Sports Teams",
-  "Movie Genres",
-  "Board Game Preferences",
-  "Coffee vs Tea",
+  "Tea Flavour",
   "Fast Food Chains",
+  "Healthy Drinks",
+  "Talented Actors/Actresses",
+  "Goated Years"
 ];
