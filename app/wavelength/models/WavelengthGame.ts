@@ -1,15 +1,22 @@
 import { WavelengthPlayer } from "./WavelengthPlayer";
 import { getRandomInt } from "@/utils/getRandom";
-import { getCategory, getRandomNumber, getGuessPoints, getHostPoints } from "../logic/gameLogic";
+import {
+  getCategory,
+  getRandomNumber,
+  getGuessPoints,
+  getHostPoints,
+} from "../logic/gameLogic";
 
 export class WavelengthGame {
-  private readonly players: WavelengthPlayer[] = [];
+  private players: WavelengthPlayer[] = [];
   private hostIndex = 0;
   private currentCategory: string = "";
   private currentTarget: number = 0;
   private guessedNumbers: number[] = []; // I want to display all gussed numbers on the spectrum at the end
 
-  startRound() {
+  constructor(players: WavelengthPlayer[]) {
+    this.players = players;
+
     if (this.players.length === 0) return;
 
     // Reset
@@ -40,8 +47,18 @@ export class WavelengthGame {
     host.addScore(score);
   }
 
+  addPlayer(name: string) {
+    // TODO: add check if player name already taken
+    const player: WavelengthPlayer = new WavelengthPlayer(name, name); // TODO: create function to create unique id based off name
+    this.players.push(player);
+  }
+
   getHost(): WavelengthPlayer {
     return this.players[this.hostIndex];
+  }
+
+  getHostIndex(): number {
+    return this.hostIndex;
   }
 
   getPlayers(): WavelengthPlayer[] {
