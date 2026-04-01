@@ -7,14 +7,23 @@ import { WavelengthPlayer } from "../models/WavelengthPlayer";
 const GameUI = () => {
   const [game, setGame] = useState<WavelengthGame>(new WavelengthGame([]));
   const [players, setPlayers] = useState<WavelengthPlayer[]>(game.getPlayers());
+  const [playerAddedText, setPlayerAddedText] = useState<string>("");
   const [isShowingTargetNumber, setIsShowingTargetNumber] =
     useState<boolean>(false);
   const [name, setName] = useState<string>("");
 
   const handleAddPlayer = () => {
     if (!name) return;
-    game.addPlayer(name);
-    setName("");
+    const addPlayerStatus = game.addPlayer(name);
+    if (addPlayerStatus) {
+      setPlayerAddedText(`Succesfully added '${name}'`);
+      setTimeout(() => {
+        setPlayerAddedText("");
+        setName("");
+      }, 3000);
+    } else {
+      setPlayerAddedText(`Name '${name}' already taken`);
+    }
   };
 
   const handleStartGame = () => {
@@ -40,6 +49,7 @@ const GameUI = () => {
         </h2>
 
         <button
+          className="className = hover:underline hover:cursor-pointer"
           onClick={() => setIsShowingTargetNumber(!isShowingTargetNumber)}
         >
           {isShowingTargetNumber ? "Hide" : "Show"} Target Number
@@ -85,6 +95,7 @@ const GameUI = () => {
       </div>
 
       <button
+        className="className = hover:underline hover:cursor-pointer"
         onClick={() => {
           handleStartGame();
         }}
@@ -93,6 +104,7 @@ const GameUI = () => {
       </button>
 
       <button
+        className="className = hover:underline hover:cursor-pointer"
         onClick={() => {
           handleEndGame();
         }}
@@ -107,7 +119,13 @@ const GameUI = () => {
         placeholder="Player name"
       />
 
-      <button onClick={handleAddPlayer}>Add Player</button>
+      <button
+        className="className = hover:underline hover:cursor-pointer"
+        onClick={handleAddPlayer}
+      >
+        Add Player
+      </button>
+      <p>{playerAddedText}</p>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {
   getHostPoints,
 } from "../logic/gameLogic";
 
+// TODO: Implement timer once connected web sockets
 export class WavelengthGame {
   private players: WavelengthPlayer[] = [];
   private hostIndex = 0;
@@ -48,10 +49,15 @@ export class WavelengthGame {
     host.addScore(score);
   }
 
-  addPlayer(name: string) {
-    // TODO: add check if player name already taken
-    const player: WavelengthPlayer = new WavelengthPlayer(name, name); // TODO: create function to create unique id based off name
+  /** @returns {boolean} boolean that represents if player succesfuly added */
+  addPlayer(name: string): boolean {
+    const exists = this.players.some((player) => player.getName() === name);
+
+    if (exists) return false;
+
+    const player = new WavelengthPlayer(name, name);
     this.players.push(player);
+    return true;
   }
 
   setSelectedWord(word: string) {
