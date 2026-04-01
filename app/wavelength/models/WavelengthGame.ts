@@ -12,6 +12,7 @@ export class WavelengthGame {
   private hostIndex = 0;
   private currentCategory: string = "";
   private currentTarget: number = 0;
+  private selectedWord: string = ""; // Only for host
   private guessedNumbers: number[] = []; // I want to display all gussed numbers on the spectrum at the end
 
   constructor(players: WavelengthPlayer[]) {
@@ -53,6 +54,10 @@ export class WavelengthGame {
     this.players.push(player);
   }
 
+  setSelectedWord(word: string) {
+    this.selectedWord = word;
+  }
+
   getHost(): WavelengthPlayer {
     return this.players[this.hostIndex];
   }
@@ -75,5 +80,9 @@ export class WavelengthGame {
 
   getGuessedNumbers(): number[] {
     return this.guessedNumbers;
+  }
+
+  getSelectedWord() {
+    return this.selectedWord;
   }
 }
