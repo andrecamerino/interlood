@@ -1,14 +1,11 @@
 import { getRandomInt } from "@/utils/getRandom";
 import { categories, WavelengthCategory } from "../data/categories";
 
-const MIN_NUMBER = 1;
-const MAX_NUMBER = 10;
 /**
- * Returns a random number between 1 and 10 (inclusive).
- * @returns {number} A random integer between min and max
+ * @returns {number} A random integer between min and max (inclusive)
  */
-export function getRandomNumber(): number {
-  return getRandomInt(MIN_NUMBER, MAX_NUMBER);
+export function getRandomNumber(max: number, min: number = 1): number {
+  return getRandomInt(min, max);
 }
 
 const SCORE_MULTIPLIER = 1;

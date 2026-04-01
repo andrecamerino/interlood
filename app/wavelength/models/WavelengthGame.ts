@@ -17,10 +17,15 @@ export class WavelengthGame {
   private selectedWord: string = ""; // Only for host
   private guessedNumbers: number[] = []; // I want to display all gussed numbers on the spectrum at the end
 
+  private minNumber: number = 1;
+  private maxNumber!: number;
+
   constructor(players: WavelengthPlayer[]) {
     this.players = players;
 
     if (this.players.length === 0) return;
+
+    this.maxNumber = (this.players.length <= 20) ? 10 : 100; 
 
     // Reset
     this.guessedNumbers = [];
@@ -28,7 +33,7 @@ export class WavelengthGame {
     // Initialise
     this.hostIndex = getRandomInt(0, this.players.length - 1);
     this.currentCategory = getCategory();
-    this.currentTarget = getRandomNumber();
+    this.currentTarget = getRandomNumber(this.maxNumber);
   }
 
   handleRoundPoints() {
@@ -93,5 +98,13 @@ export class WavelengthGame {
 
   getSelectedWord() {
     return this.selectedWord;
+  }
+
+  getMinNumber() {
+    return this.minNumber
+  }
+
+  getMaxNumber() {
+    return this.maxNumber
   }
 }
