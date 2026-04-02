@@ -5,22 +5,19 @@ import { WavelengthGame } from "../models/WavelengthGame";
 import { WavelengthPlayer } from "../models/WavelengthPlayer";
 
 const GameUI = () => {
-  const [game, setGame] = useState<WavelengthGame>(new WavelengthGame([]));
+  const [game] = useState<WavelengthGame>(new WavelengthGame([]));
   const [players, setPlayers] = useState<WavelengthPlayer[]>(game.getPlayers());
   const [playerAddedText, setPlayerAddedText] = useState<string>("");
-  const [isShowingTargetNumber, setIsShowingTargetNumber] =
-    useState<boolean>(false);
+  const [isShowingTargetNumber, setIsShowingTargetNumber] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-
   const [selectedWord, setSelectedWord] = useState<string>("");
-  const [hasSubmitWord, setHasSubmitWord] = useState<boolean>(false);
 
   const handleAddPlayer = () => {
     if (!name) return;
     const addPlayerStatus = game.addPlayer(name);
     if (addPlayerStatus) {
       refreshPlayers();
-      setPlayerAddedText(`Succesfully added '${name}'`);
+      setPlayerAddedText(`Successfully added '${name}'`);
       setTimeout(() => {
         setPlayerAddedText("");
         setName("");
@@ -34,28 +31,26 @@ const GameUI = () => {
     game.removePlayer(name);
     refreshPlayers();
   };
-
+  
   const handleStartGame = () => {
-    setGame(new WavelengthGame(players))
-    game.startGame()
+    game.startGame();
+    refreshPlayers();
     setIsShowingTargetNumber(false);
     setSelectedWord("");
-    setHasSubmitWord(false);
   };
 
   const handleStartGuessing = () => {
     game.setSelectedWord(selectedWord);
-    setHasSubmitWord(true);
     game.startGuessing();
   };
 
-  const handleSubmitWords = () => {
+  const handleSubmitNumbers = () => {
     game.reveal();
     refreshPlayers();
     setIsShowingTargetNumber(true);
     setTimeout(() => {
       handleEndGame();
-    }, 5000); // 5s
+    }, 5000);
   };
 
   const handleEndGame = () => {
@@ -71,25 +66,24 @@ const GameUI = () => {
     <div className="flex flex-col gap-1 items-start">
       <h1>WAVELENGTH</h1>
       <p>Phase: {game.getPhase()}</p>
+
       {game.getCurrentCategory() && (
         <div>
           <h2>
             Category: {game.getCurrentCategory().category} |{" "}
-            {game.getMinNumber()}: {game.getCurrentCategory().minLabel} -{">"}{" "}
+            {game.getMinNumber()}: {game.getCurrentCategory().minLabel} -&gt;{" "}
             {game.getMaxNumber()}: {game.getCurrentCategory().maxLabel}
           </h2>
         </div>
       )}
 
-      {game.getCurrentTarget() != 0 && (
+      {game.getCurrentTarget() !== 0 && (
         <div className="flex flex-row gap-2">
           <h2>
-            Target Number:{" "}
-            {isShowingTargetNumber ? game.getCurrentTarget() : "___"}
+            Target Number: {isShowingTargetNumber ? game.getCurrentTarget() : "___"}
           </h2>
-
           <button
-            className="className = hover:underline hover:cursor-pointer"
+            className="hover:underline hover:cursor-pointer"
             onClick={() => setIsShowingTargetNumber(!isShowingTargetNumber)}
           >
             {isShowingTargetNumber ? "Hide" : "Show"} Target Number
@@ -100,20 +94,18 @@ const GameUI = () => {
       {players.length > 0 && <h2>Host: {game.getHost().getName()}</h2>}
 
       {game.getCurrentCategory() &&
-        (!hasSubmitWord ? (
+        (game.canSelectWord() ? (
           <div className="flex flex-row gap-2">
             <p>Selected Word: </p>
             <input
               type="text"
               value={selectedWord}
-              onChange={(e) => {
-                return !hasSubmitWord ? setSelectedWord(e.target.value) : null;
-              }}
+              onChange={(e) => setSelectedWord(e.target.value)}
               placeholder="Input Here"
             />
             <button
               className="hover:underline hover:cursor-pointer"
-              onClick={() => handleStartGuessing()}
+              onClick={handleStartGuessing}
             >
               Submit Word
             </button>
@@ -128,22 +120,22 @@ const GameUI = () => {
             <p>
               {player.getName()}: Points: {player.getScore()}
             </p>
+
             {game.isHost(player) ? (
               "Selecting Word (Host)"
-            ) : (
+            ) : game.canGuess() ? (
               <div className="flex flex-row gap-2">
                 <p>Number Guess: </p>
                 <input
                   type="number"
-                  min={1}
-                  max={10}
-                  onChange={(e) =>
-                    player.setSelectedNumber(Number(e.target.value))
-                  }
+                  min={game.getMinNumber()}
+                  max={game.getMaxNumber()}
+                  onChange={(e) => player.setSelectedNumber(Number(e.target.value))}
                   placeholder="Select number"
                 />
               </div>
-            )}
+            ) : null}
+
             <button
               className="hover:underline hover:cursor-pointer"
               onClick={() => handleRemovePlayer(player.getName())}
@@ -155,20 +147,16 @@ const GameUI = () => {
       </div>
 
       <button
-        className="className = hover:underline hover:cursor-pointer"
-        onClick={() => {
-          handleStartGame();
-        }}
+        className="hover:underline hover:cursor-pointer"
+        onClick={handleStartGame}
       >
         Start New Round
       </button>
 
-      {game.getCurrentCategory() && (
+      {game.canReveal() && (
         <button
-          className="className = hover:underline hover:cursor-pointer"
-          onClick={() => {
-            handleSubmitWords();
-          }}
+          className="hover:underline hover:cursor-pointer"
+          onClick={handleSubmitNumbers}
         >
           Submit Number Choices
         </button>
@@ -176,14 +164,11 @@ const GameUI = () => {
 
       <div>
         <h2>Leaderboard</h2>
-        {players &&
-          game.getLeaderboard().map((player, index) => {
-            return (
-              <p key={player.getId()}>
-                {index + 1}. {player.getName()}: {player.getScore()}
-              </p>
-            );
-          })}
+        {game.getLeaderboard().map((player, index) => (
+          <p key={player.getId()}>
+            {index + 1}. {player.getName()}: {player.getScore()}
+          </p>
+        ))}
       </div>
 
       <input
@@ -194,11 +179,12 @@ const GameUI = () => {
       />
 
       <button
-        className="className = hover:underline hover:cursor-pointer"
+        className="hover:underline hover:cursor-pointer"
         onClick={handleAddPlayer}
       >
         Add Player
       </button>
+
       <p>{playerAddedText}</p>
     </div>
   );
