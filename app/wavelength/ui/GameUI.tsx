@@ -62,8 +62,8 @@ const GameUI = () => {
   };
 
   const handleShowLeaderboard = () => {
-    game.showLeaderboard()
-    refreshGame()
+    game.showLeaderboard();
+    refreshGame();
     setTimeout(() => {
       handleEndGame();
     }, 5000);
@@ -165,12 +165,12 @@ const GameUI = () => {
         Start New Round
       </button>
 
-        <button
-          className="hover:underline hover:cursor-pointer"
-          onClick={handleSubmitNumbers}
-        >
-          Submit Number Choices
-        </button>
+      <button
+        className="hover:underline hover:cursor-pointer"
+        onClick={handleSubmitNumbers}
+      >
+        Submit Number Choices
+      </button>
 
       {game.isShowingLeaderboard() && <div>
         <h2>Leaderboard</h2>
