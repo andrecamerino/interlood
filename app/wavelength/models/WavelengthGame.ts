@@ -34,8 +34,6 @@ export class WavelengthGame {
     this.players = players;
 
     if (this.players.length === 0) return;
-
-    this.startGame();
   }
 
   // TODO: implement timer with run round and sockets

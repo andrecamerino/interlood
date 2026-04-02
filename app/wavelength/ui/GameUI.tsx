@@ -36,7 +36,8 @@ const GameUI = () => {
   };
 
   const handleStartGame = () => {
-    setGame(new WavelengthGame(players));
+    setGame(new WavelengthGame(players))
+    game.startGame()
     setIsShowingTargetNumber(false);
     setSelectedWord("");
     setHasSubmitWord(false);
