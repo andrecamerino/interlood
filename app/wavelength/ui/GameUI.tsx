@@ -142,6 +142,18 @@ const GameUI = () => {
         </button>
       )}
 
+      <div>
+        <h2>Leaderboard</h2>
+        {players &&
+          game.getLeaderboard().map((player, index) => {
+            return (
+              <p key={player.getId()}>
+                {index + 1}. {player.getName()}: {player.getScore()}
+              </p>
+            );
+          })}
+      </div>
+
       <input
         type="text"
         value={name}
