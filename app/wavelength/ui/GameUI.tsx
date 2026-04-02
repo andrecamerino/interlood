@@ -16,7 +16,7 @@ const GameUI = () => {
     if (!name) return;
     const addPlayerStatus = game.addPlayer(name);
     if (addPlayerStatus) {
-      setPlayers([...game.getPlayers()]);
+      refreshPlayers();
       setPlayerAddedText(`Succesfully added '${name}'`);
       setTimeout(() => {
         setPlayerAddedText("");
@@ -29,7 +29,7 @@ const GameUI = () => {
 
   const handleRemovePlayer = (name: string) => {
     game.removePlayer(name);
-    setPlayers([...game.getPlayers()]);
+    refreshPlayers();
   };
 
   const handleStartGame = () => {
@@ -39,8 +39,12 @@ const GameUI = () => {
 
   const handleEndGame = () => {
     game.handleRoundPoints();
-    setPlayers([...game.getPlayers()]); // spread creates a new array reference
+    refreshPlayers();
     setIsShowingTargetNumber(true);
+  };
+
+  const refreshPlayers = () => {
+    setPlayers([...game.getPlayers()]);
   };
 
   return (
