@@ -10,6 +10,7 @@ import { WavelengthCategory } from "../data/categories";
 
 // TODO: Implement timer once connected web sockets
 export class WavelengthGame {
+  // TODO: Optimise player array, add map for indexing for faster add, remove etc
   private players: WavelengthPlayer[] = [];
   private hostIndex = 0;
   private currentCategory!: WavelengthCategory;
@@ -25,7 +26,7 @@ export class WavelengthGame {
 
     if (this.players.length === 0) return;
 
-    this.maxNumber = (this.players.length <= 20) ? 10 : 100; 
+    this.maxNumber = this.players.length <= 20 ? 10 : 100;
 
     // Reset
     this.guessedNumbers = [];
@@ -67,6 +68,24 @@ export class WavelengthGame {
   }
 
   // TODO: Implement removePlayer e.g. when kicked by room host
+  removePlayer(name: string): boolean {
+    const index = this.players.findIndex((player) => player.getName() === name);
+
+    if (index === -1) return false;
+
+    this.players.splice(index, 1);
+
+    // Fix host index
+    if (this.players.length === 0) {
+      this.hostIndex = 0;
+    } else if (index < this.hostIndex) {
+      this.hostIndex--; // shift left
+    } else if (index === this.hostIndex) {
+      this.hostIndex = this.hostIndex % this.players.length; // move to next valid
+    }
+
+    return true;
+  }
 
   setSelectedWord(word: string) {
     this.selectedWord = word;
@@ -101,10 +120,10 @@ export class WavelengthGame {
   }
 
   getMinNumber() {
-    return this.minNumber
+    return this.minNumber;
   }
 
   getMaxNumber() {
-    return this.maxNumber
+    return this.maxNumber;
   }
 }

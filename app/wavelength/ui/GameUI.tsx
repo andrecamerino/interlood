@@ -16,6 +16,7 @@ const GameUI = () => {
     if (!name) return;
     const addPlayerStatus = game.addPlayer(name);
     if (addPlayerStatus) {
+      setPlayers([...game.getPlayers()]);
       setPlayerAddedText(`Succesfully added '${name}'`);
       setTimeout(() => {
         setPlayerAddedText("");
@@ -24,6 +25,11 @@ const GameUI = () => {
     } else {
       setPlayerAddedText(`Name '${name}' already taken`);
     }
+  };
+
+  const handleRemovePlayer = (name: string) => {
+    game.removePlayer(name);
+    setPlayers([...game.getPlayers()]);
   };
 
   const handleStartGame = () => {
@@ -43,9 +49,9 @@ const GameUI = () => {
       {game.getCurrentCategory() && (
         <div>
           <h2>
-            Category: {game.getCurrentCategory().category} | {game.getMinNumber()}:{" "}
-            {game.getCurrentCategory().minLabel} -{">"} {game.getMaxNumber()}:{" "}
-            {game.getCurrentCategory().maxLabel}
+            Category: {game.getCurrentCategory().category} |{" "}
+            {game.getMinNumber()}: {game.getCurrentCategory().minLabel} -{">"}{" "}
+            {game.getMaxNumber()}: {game.getCurrentCategory().maxLabel}
           </h2>
         </div>
       )}
@@ -82,7 +88,7 @@ const GameUI = () => {
 
       <div className="flex flex-col gap-4 py-4">
         {players.map((player) => (
-          <div key={player.getId()} className="flex flex-col">
+          <div key={player.getId()} className="flex flex-row gap-2">
             <p>
               {player.getName()}: Points: {player.getScore()}
             </p>
@@ -102,6 +108,12 @@ const GameUI = () => {
                 />
               </div>
             )}
+            <button
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleRemovePlayer(player.getName())}
+            >
+              Remove Player
+            </button>
           </div>
         ))}
       </div>
