@@ -3,5 +3,7 @@
   "version": "0.0.1",
   "description": "Interlood backend",
   "type": "module",
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.22.1"
+  }
 }
