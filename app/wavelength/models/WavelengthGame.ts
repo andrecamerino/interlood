@@ -51,8 +51,7 @@ export class WavelengthGame {
 
     this.maxNumber = this.players.length <= 20 ? 10 : 100;
 
-    // Reset
-    this.guessedNumbers = [];
+    this.resetGame()
 
     // Initialise
     this.hostIndex = getRandomInt(0, this.players.length - 1);
@@ -72,6 +71,11 @@ export class WavelengthGame {
 
   endGame() {
     this.setPhase(WavelengthGamePhases.FINISHED);
+  }
+
+  resetGame() {
+    this.selectedWord = "";
+    this.guessedNumbers = [];
   }
 
   setPhase(phase: WavelengthGamePhases) {
@@ -126,6 +130,18 @@ export class WavelengthGame {
     }
 
     return true;
+  }
+
+  canSelectWord(): boolean {
+    return this.gamePhase === WavelengthGamePhases.SELECTING_WORD;
+  }
+
+  canGuess(): boolean {
+    return this.gamePhase === WavelengthGamePhases.GUESSING_NUMBERS;
+  }
+
+  canReveal(): boolean {
+    return this.gamePhase === WavelengthGamePhases.REVEALING;
   }
 
   getLeaderboard(): WavelengthPlayer[] {
