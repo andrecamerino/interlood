@@ -8,6 +8,13 @@ import {
 } from "../logic/gameLogic";
 import { WavelengthCategory } from "../data/categories";
 
+type wavelengthGamePhase =
+  | "waiting"
+  | "selectingWord"
+  | "guessingNumbers"
+  | "revealing"
+  | "finished";
+
 // TODO: Implement timer once connected web sockets
 export class WavelengthGame {
   // TODO: Optimise player array, add map for indexing for faster add, remove etc
@@ -17,6 +24,7 @@ export class WavelengthGame {
   private currentTarget: number = 0;
   private selectedWord: string = ""; // Only for host
   private guessedNumbers: number[] = []; // I want to display all gussed numbers on the spectrum at the end
+  private gamePhase: wavelengthGamePhase = "waiting";
 
   private minNumber: number = 1;
   private maxNumber!: number;
@@ -26,6 +34,20 @@ export class WavelengthGame {
 
     if (this.players.length === 0) return;
 
+    this.startGame();
+  }
+
+  // TODO: implement timer with run round and sockets
+  // TODO: add skip timer function
+  runRound() {
+    throw new Error("timer not implemented");
+    setTimeout(() => this.startGame(), 20000); // 20s
+    setTimeout(() => this.startGuessing(), 20000); // 20s
+    setTimeout(() => this.reveal(), 10000); // 10s
+    this.endGame();
+  }
+
+  startGame() {
     this.maxNumber = this.players.length <= 20 ? 10 : 100;
 
     // Reset
@@ -35,6 +57,22 @@ export class WavelengthGame {
     this.hostIndex = getRandomInt(0, this.players.length - 1);
     this.currentCategory = getCategory();
     this.currentTarget = getRandomNumber(this.maxNumber);
+
+    this.gamePhase = "selectingWord";
+  }
+
+  startGuessing() {
+    this.gamePhase = "guessingNumbers";
+    // start timer
+  }
+
+  reveal() {
+    this.gamePhase = "revealing";
+    this.handleRoundPoints();
+  }
+
+  endGame() {
+    this.gamePhase = "finished";
   }
 
   handleRoundPoints() {
@@ -92,6 +130,10 @@ export class WavelengthGame {
 
   setSelectedWord(word: string) {
     this.selectedWord = word;
+  }
+
+  getPhase(): wavelengthGamePhase {
+    return this.gamePhase;
   }
 
   getHost(): WavelengthPlayer {

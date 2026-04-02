@@ -12,6 +12,9 @@ const GameUI = () => {
     useState<boolean>(false);
   const [name, setName] = useState<string>("");
 
+  const [selectedWord, setSelectedWord] = useState<string>("");
+  const [hasSubmitWord, setHasSubmitWord] = useState<boolean>(false);
+
   const handleAddPlayer = () => {
     if (!name) return;
     const addPlayerStatus = game.addPlayer(name);
@@ -35,12 +38,28 @@ const GameUI = () => {
   const handleStartGame = () => {
     setGame(new WavelengthGame(players));
     setIsShowingTargetNumber(false);
+    setSelectedWord("");
+    setHasSubmitWord(false);
+  };
+
+  const handleStartGuessing = () => {
+    game.setSelectedWord(selectedWord);
+    setHasSubmitWord(true);
+    game.startGuessing();
+  };
+
+  const handleSubmitWords = () => {
+    game.reveal();
+    refreshPlayers();
+    setIsShowingTargetNumber(true);
+    setTimeout(() => {
+      handleEndGame();
+    }, 5000); // 5s
   };
 
   const handleEndGame = () => {
-    game.handleRoundPoints();
+    game.endGame();
     refreshPlayers();
-    setIsShowingTargetNumber(true);
   };
 
   const refreshPlayers = () => {
@@ -50,6 +69,7 @@ const GameUI = () => {
   return (
     <div className="flex flex-col gap-1 items-start">
       <h1>WAVELENGTH</h1>
+      <p>Phase: {game.getPhase()}</p>
       {game.getCurrentCategory() && (
         <div>
           <h2>
@@ -78,17 +98,28 @@ const GameUI = () => {
 
       {players.length > 0 && <h2>Host: {game.getHost().getName()}</h2>}
 
-      {game.getCurrentCategory() && (
-        <div className="flex flex-row gap-2">
-          <p>Selected Word: </p>
-          <input
-            type="text"
-            // value={name}
-            onChange={(e) => game.setSelectedWord(e.target.value)}
-            placeholder="Input Here"
-          />
-        </div>
-      )}
+      {game.getCurrentCategory() &&
+        (!hasSubmitWord ? (
+          <div className="flex flex-row gap-2">
+            <p>Selected Word: </p>
+            <input
+              type="text"
+              value={selectedWord}
+              onChange={(e) => {
+                return !hasSubmitWord ? setSelectedWord(e.target.value) : null;
+              }}
+              placeholder="Input Here"
+            />
+            <button
+              className="hover:underline hover:cursor-pointer"
+              onClick={() => handleStartGuessing()}
+            >
+              Submit Word
+            </button>
+          </div>
+        ) : (
+          <p>Selected Word: {selectedWord}</p>
+        ))}
 
       <div className="flex flex-col gap-4 py-4">
         {players.map((player) => (
@@ -135,7 +166,7 @@ const GameUI = () => {
         <button
           className="className = hover:underline hover:cursor-pointer"
           onClick={() => {
-            handleEndGame();
+            handleSubmitWords();
           }}
         >
           Submit Number Choices
