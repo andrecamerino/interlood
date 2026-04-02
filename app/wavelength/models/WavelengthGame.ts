@@ -13,6 +13,7 @@ enum WavelengthGamePhases {
   SELECTING_WORD = "SELECTING WORD",
   GUESSING_NUMBERS = "GUESSING NUMBERS",
   REVEALING = "REVEALING",
+  SHOWING_LEADERBOARD = "SHOWING_LEADERBOARD",
   FINISHED = "FINISHED",
 }
 
@@ -51,7 +52,7 @@ export class WavelengthGame {
 
     this.maxNumber = this.players.length <= 20 ? 10 : 100;
 
-    this.resetGame()
+    this.resetGame();
 
     // Initialise
     this.hostIndex = getRandomInt(0, this.players.length - 1);
@@ -67,6 +68,10 @@ export class WavelengthGame {
   reveal() {
     this.setPhase(WavelengthGamePhases.REVEALING);
     this.handleRoundPoints();
+  }
+
+  showLeaderboard() {
+    this.setPhase(WavelengthGamePhases.SHOWING_LEADERBOARD);
   }
 
   endGame() {
@@ -146,6 +151,10 @@ export class WavelengthGame {
 
   getLeaderboard(): WavelengthPlayer[] {
     return [...this.players].sort((a, b) => b.getScore() - a.getScore());
+  }
+
+  isShowingLeaderboard(): boolean {
+    return this.getPhase() === WavelengthGamePhases.SHOWING_LEADERBOARD;
   }
 
   setSelectedWord(word: string) {

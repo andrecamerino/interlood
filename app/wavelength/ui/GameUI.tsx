@@ -57,9 +57,17 @@ const GameUI = () => {
     setIsShowingTargetNumber(true);
     refreshGame();
     setTimeout(() => {
-      handleEndGame();
+      handleShowLeaderboard();
     }, 5000);
   };
+
+  const handleShowLeaderboard = () => {
+    game.showLeaderboard()
+    refreshGame()
+    setTimeout(() => {
+      handleEndGame();
+    }, 5000);
+  }
 
   const handleEndGame = () => {
     game.endGame();
@@ -164,14 +172,14 @@ const GameUI = () => {
           Submit Number Choices
         </button>
 
-      <div>
+      {game.isShowingLeaderboard() && <div>
         <h2>Leaderboard</h2>
         {game.getLeaderboard().map((player, index) => (
           <p key={player.getId()}>
             {index + 1}. {player.getName()}: {player.getScore()}
           </p>
         ))}
-      </div>
+      </div>}
 
       <input
         type="text"
