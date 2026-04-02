@@ -67,7 +67,6 @@ export class WavelengthGame {
     return true;
   }
 
-  // TODO: Implement removePlayer e.g. when kicked by room host
   removePlayer(name: string): boolean {
     const index = this.players.findIndex((player) => player.getName() === name);
 
@@ -85,6 +84,10 @@ export class WavelengthGame {
     }
 
     return true;
+  }
+
+  getLeaderboard(): WavelengthPlayer[] {
+    return [...this.players].sort((a, b) => b.getScore() - a.getScore());
   }
 
   setSelectedWord(word: string) {
