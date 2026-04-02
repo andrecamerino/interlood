@@ -136,6 +136,10 @@ export class WavelengthGame {
     this.selectedWord = word;
   }
 
+  isHost(player: WavelengthPlayer): boolean {
+    return this.getHost() === player;
+  }
+
   getPhase(): WavelengthGamePhases {
     return this.gamePhase;
   }

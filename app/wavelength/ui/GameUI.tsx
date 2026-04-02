@@ -128,7 +128,7 @@ const GameUI = () => {
             <p>
               {player.getName()}: Points: {player.getScore()}
             </p>
-            {game.getHost().getName() == player.getName() ? (
+            {game.isHost(player) ? (
               "Selecting Word (Host)"
             ) : (
               <div className="flex flex-row gap-2">
