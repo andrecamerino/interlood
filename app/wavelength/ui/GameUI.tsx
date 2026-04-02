@@ -11,12 +11,19 @@ const GameUI = () => {
   const [isShowingTargetNumber, setIsShowingTargetNumber] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [selectedWord, setSelectedWord] = useState<string>("");
+  const [, setRender] = useState(0); // just for forcing re-render
+
+  // Forces a re-render of the component
+  const refreshGame = () => {
+    setPlayers([...game.getPlayers()]);
+    setRender(prev => prev + 1);
+  };
 
   const handleAddPlayer = () => {
     if (!name) return;
     const addPlayerStatus = game.addPlayer(name);
     if (addPlayerStatus) {
-      refreshPlayers();
+      refreshGame();
       setPlayerAddedText(`Successfully added '${name}'`);
       setTimeout(() => {
         setPlayerAddedText("");
@@ -29,25 +36,26 @@ const GameUI = () => {
 
   const handleRemovePlayer = (name: string) => {
     game.removePlayer(name);
-    refreshPlayers();
+    refreshGame();
   };
   
   const handleStartGame = () => {
     game.startGame();
-    refreshPlayers();
     setIsShowingTargetNumber(false);
     setSelectedWord("");
+    refreshGame();
   };
 
   const handleStartGuessing = () => {
     game.setSelectedWord(selectedWord);
     game.startGuessing();
+    refreshGame();
   };
 
   const handleSubmitNumbers = () => {
     game.reveal();
-    refreshPlayers();
     setIsShowingTargetNumber(true);
+    refreshGame();
     setTimeout(() => {
       handleEndGame();
     }, 5000);
@@ -55,11 +63,7 @@ const GameUI = () => {
 
   const handleEndGame = () => {
     game.endGame();
-    refreshPlayers();
-  };
-
-  const refreshPlayers = () => {
-    setPlayers([...game.getPlayers()]);
+    refreshGame();
   };
 
   return (
@@ -153,14 +157,12 @@ const GameUI = () => {
         Start New Round
       </button>
 
-      {game.canReveal() && (
         <button
           className="hover:underline hover:cursor-pointer"
           onClick={handleSubmitNumbers}
         >
           Submit Number Choices
         </button>
-      )}
 
       <div>
         <h2>Leaderboard</h2>
