@@ -6,7 +6,7 @@ import {
   getGuessPoints,
   getHostPoints,
 } from "@/logic/gameLogic";
-import { WavelengthCategory } from "@frontend/app/wavelength/data/categories";
+import { WavelengthCategory } from "@/data/categories";
 import { WavelengthGamePhases } from "@shared/models/wavelength/WavelengthGamePhases";
 
 // TODO: Implement timer once connected web sockets

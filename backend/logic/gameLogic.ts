@@ -1,8 +1,5 @@
 import { getRandomInt } from "@/utils/getRandom";
-import {
-  categories,
-  WavelengthCategory,
-} from "../../frontend/app/wavelength/data/categories";
+import { categories, WavelengthCategory } from "@/data/categories";
 
 /**
  * @returns {number} A random integer between min and max (inclusive)
