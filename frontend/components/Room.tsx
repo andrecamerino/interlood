@@ -1,28 +1,49 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-// TODO: use .env var or find another way to do this socket stuff, best practice
-const socket = io("http://localhost:3002"); // move outside component to avoid reconnecting on re-render
+const socket = io("http://localhost:3002");
 
 const Room = () => {
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState("");
+  const [players, setPlayers] = useState<string[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    socket.on("room updated", (room) => {
+      setPlayers(room.players.map((p: { name: string }) => p.name));
+    });
+
+    socket.on("join error", (msg: string) => {
+      setError(msg);
+    });
+
+    return () => {
+      socket.off("room updated");
+      socket.off("join error");
+    };
+  }, []);
 
   const handleJoin = () => {
+    if (!name) return;
     socket.emit("user join", name);
   };
 
   return (
     <div>
       <h1>Room</h1>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <input
         type="text"
         placeholder="Name"
         onChange={(e) => setName(e.target.value)}
       />
-      <button onClick={handleJoin} className="hover:underline hover:cursor-pointer">
-        Join Room
-      </button>
+      <button onClick={handleJoin}>Join Room</button>
+      <ul>
+        {players.map((p, i) => (
+          <li key={i}>{p}</li>
+        ))}
+      </ul>
     </div>
   );
 };
