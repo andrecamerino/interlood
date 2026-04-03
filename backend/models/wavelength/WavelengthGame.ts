@@ -1,12 +1,12 @@
-import { WavelengthPlayer } from "../../../../backend/models/wavelength/WavelengthPlayer";
+import { WavelengthPlayer } from "@/models/wavelength/WavelengthPlayer";
 import { getRandomInt } from "@/utils/getRandom";
 import {
   getCategory,
   getRandomNumber,
   getGuessPoints,
   getHostPoints,
-} from "../logic/gameLogic";
-import { WavelengthCategory } from "../data/categories";
+} from "@/logic/gameLogic";
+import { WavelengthCategory } from "@frontend/app/wavelength/data/categories";
 import { WavelengthGamePhases } from "@shared/models/wavelength/WavelengthGamePhases";
 
 // TODO: Implement timer once connected web sockets
