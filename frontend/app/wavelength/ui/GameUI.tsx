@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { WavelengthGame } from "../models/WavelengthGame";
-import { WavelengthPlayer } from "../models/WavelengthPlayer";
+import { WavelengthPlayer } from "../../../../shared/models/wavelength/WavelengthPlayer";
 
 const GameUI = () => {
   const [game] = useState<WavelengthGame>(new WavelengthGame([]));
   const [players, setPlayers] = useState<WavelengthPlayer[]>(game.getPlayers());
   const [playerAddedText, setPlayerAddedText] = useState<string>("");
-  const [isShowingTargetNumber, setIsShowingTargetNumber] = useState<boolean>(false);
+  const [isShowingTargetNumber, setIsShowingTargetNumber] =
+    useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [selectedWord, setSelectedWord] = useState<string>("");
   const [, setRender] = useState(0); // just for forcing re-render
@@ -16,7 +17,7 @@ const GameUI = () => {
   // Forces a re-render of the component
   const refreshGame = () => {
     setPlayers([...game.getPlayers()]);
-    setRender(prev => prev + 1);
+    setRender((prev) => prev + 1);
   };
 
   const handleAddPlayer = () => {
@@ -38,7 +39,7 @@ const GameUI = () => {
     game.removePlayer(name);
     refreshGame();
   };
-  
+
   const handleStartGame = () => {
     game.startGame();
     setIsShowingTargetNumber(false);
@@ -67,7 +68,7 @@ const GameUI = () => {
     setTimeout(() => {
       handleEndGame();
     }, 5000);
-  }
+  };
 
   const handleEndGame = () => {
     game.endGame();
@@ -92,7 +93,8 @@ const GameUI = () => {
       {game.getCurrentTarget() !== 0 && (
         <div className="flex flex-row gap-2">
           <h2>
-            Target Number: {isShowingTargetNumber ? game.getCurrentTarget() : "___"}
+            Target Number:{" "}
+            {isShowingTargetNumber ? game.getCurrentTarget() : "___"}
           </h2>
           <button
             className="hover:underline hover:cursor-pointer"
@@ -142,7 +144,9 @@ const GameUI = () => {
                   type="number"
                   min={game.getMinNumber()}
                   max={game.getMaxNumber()}
-                  onChange={(e) => player.setSelectedNumber(Number(e.target.value))}
+                  onChange={(e) =>
+                    player.setSelectedNumber(Number(e.target.value))
+                  }
                   placeholder="Select number"
                 />
               </div>
@@ -172,14 +176,16 @@ const GameUI = () => {
         Submit Number Choices
       </button>
 
-      {game.isShowingLeaderboard() && <div>
-        <h2>Leaderboard</h2>
-        {game.getLeaderboard().map((player, index) => (
-          <p key={player.getId()}>
-            {index + 1}. {player.getName()}: {player.getScore()}
-          </p>
-        ))}
-      </div>}
+      {game.isShowingLeaderboard() && (
+        <div>
+          <h2>Leaderboard</h2>
+          {game.getLeaderboard().map((player, index) => (
+            <p key={player.getId()}>
+              {index + 1}. {player.getName()}: {player.getScore()}
+            </p>
+          ))}
+        </div>
+      )}
 
       <input
         type="text"

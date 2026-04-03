@@ -1,4 +1,4 @@
-import { WavelengthPlayer } from "./WavelengthPlayer";
+import { WavelengthPlayer } from "../../../../shared/models/wavelength/WavelengthPlayer";
 import { getRandomInt } from "@/utils/getRandom";
 import {
   getCategory,
@@ -7,7 +7,7 @@ import {
   getHostPoints,
 } from "../logic/gameLogic";
 import { WavelengthCategory } from "../data/categories";
-import { WavelengthGamePhases} from "@shared/models/wavelength/WavelengthGamePhases"
+import { WavelengthGamePhases } from "@shared/models/wavelength/WavelengthGamePhases";
 
 // TODO: Implement timer once connected web sockets
 export class WavelengthGame {

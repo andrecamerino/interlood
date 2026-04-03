@@ -1,4 +1,4 @@
-import { Player } from "@/models/Player";
+import { Player } from "@shared/models/Player";
 
 export class WavelengthPlayer extends Player {
   private score: number = 0;
