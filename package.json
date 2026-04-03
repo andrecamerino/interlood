@@ -3,10 +3,16 @@
   "private": true,
   "scripts": {
     "dev:frontend": "pnpm --filter frontend dev",
-    "dev:backend": "pnpm --filter backend dev",
+    "dev:backend": "pnpm tsx backend/index.ts",
     "dev": "pnpm run dev:frontend & pnpm run dev:backend",
     "build:frontend": "pnpm --filter frontend build",
     "build:backend": "pnpm --filter backend build",
     "build": "pnpm run build:frontend && pnpm run build:backend"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.3"
   }
 }
