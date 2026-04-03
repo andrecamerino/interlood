@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { io } from "socket.io-client";
+import { getSocket } from "@/lib/socket";
 
-const socket = io("http://localhost:3002");
+const socket = getSocket();
 
 const Room = () => {
   const [name, setName] = useState("");
