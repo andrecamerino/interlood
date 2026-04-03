@@ -1,5 +1,5 @@
 import { Player } from "@shared/models/Player";
-import { RoomPhase } from "@shared/types/RoomPhase";
+import { RoomPhase } from "../../shared/types/RoomPhase"
 import { GameType } from "@shared/types/GameType"
 
 export class Room {
