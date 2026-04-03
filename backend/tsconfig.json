@@ -5,6 +5,11 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["express", "node"]
+    "types": ["express"],
+    "paths": {
+      "@/*": ["./*"],
+      "@shared/*": ["../shared/*"],
+      "@frontend/*": ["../frontend/*"],
+    }
   }
 }
