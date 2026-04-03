@@ -18,12 +18,8 @@ new SocketManager(io);
 const socketManager = new SocketManager(io);
 
 app.get("/", (req, res) => {
-  const room = socketManager.getRoom();
   res.send(`
-    <h1>Players: ${room.getPlayers().length}</h1>
-    <ul>
-      ${room.getPlayers().map(p => `<li>${p.getName()}</li>`).join("")}
-    </ul>
+    <h1>Socket Connected on PORT: ${PORT}</h1>
   `);
 });
 
