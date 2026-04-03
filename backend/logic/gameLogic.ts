@@ -1,5 +1,8 @@
 import { getRandomInt } from "@/utils/getRandom";
-import { categories, WavelengthCategory } from "../data/categories";
+import {
+  categories,
+  WavelengthCategory,
+} from "../../frontend/app/wavelength/data/categories";
 
 /**
  * @returns {number} A random integer between min and max (inclusive)
@@ -9,7 +12,10 @@ export function getRandomNumber(max: number, min: number = 1): number {
 }
 
 const SCORE_MULTIPLIER = 1;
-export function getGuessPoints(targetNumber: number, selectedNumber: number): number {
+export function getGuessPoints(
+  targetNumber: number,
+  selectedNumber: number,
+): number {
   const difference = Math.abs(targetNumber - selectedNumber);
   return difference < 2 ? (3 - difference) * SCORE_MULTIPLIER : 0;
 }
