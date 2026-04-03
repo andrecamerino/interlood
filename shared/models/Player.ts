@@ -1,17 +1,18 @@
-export class Player {
+import { User } from "./User";
+
+export class Player extends User {
   constructor(
-    private readonly id: string,
+    id: string,
     private readonly name: string,
-  ) {}
-
-  toJSON() {
-    return { id: this.id, name: this.name };
+  ) {
+    super(id);
   }
 
-  getId() {
-    return this.id;
-  }
   getName() {
     return this.name;
+  }
+
+  toJSON() {
+    return { ...super.toJSON(), name: this.name };
   }
 }
