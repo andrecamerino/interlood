@@ -30,6 +30,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "../shared/models/wavelength/WavelengthPlayer.ts", "../shared/models/Player.ts"  ],
+, "../backend/models/wavelength/WavelengthPlayer.ts", "../shared/models/Player.ts"  ],
   "exclude": ["node_modules"]
 }

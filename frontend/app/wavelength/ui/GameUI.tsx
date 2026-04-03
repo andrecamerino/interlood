@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { WavelengthGame } from "../models/WavelengthGame";
-import { WavelengthPlayer } from "../../../../shared/models/wavelength/WavelengthPlayer";
+import { WavelengthPlayer } from "../../../../backend/models/wavelength/WavelengthPlayer";
 
 const GameUI = () => {
   const [game] = useState<WavelengthGame>(new WavelengthGame([]));

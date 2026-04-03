@@ -1,4 +1,4 @@
-import { WavelengthPlayer } from "../../../../shared/models/wavelength/WavelengthPlayer";
+import { WavelengthPlayer } from "../../../../backend/models/wavelength/WavelengthPlayer";
 import { getRandomInt } from "@/utils/getRandom";
 import {
   getCategory,
