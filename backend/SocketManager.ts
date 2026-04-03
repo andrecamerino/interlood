@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { Player } from "@shared/models/Player";
 import { RoomManager } from "./models/RoomManager";
+import { Host } from "@shared/models/Host";
 
 export class SocketManager {
   private io: Server;
@@ -34,7 +35,10 @@ export class SocketManager {
 
   private createRoom(socket: Socket) {
     socket.on("create room", () => {
-      const roomId = this.roomManager.addRoom(socket.id);
+      const host = new Host(socket.id);
+      const roomId = this.roomManager.addRoom(host);
+      socket.join(roomId); // host joins the socket.io room too
+      this.socketRoomMap.set(socket.id, roomId); // track host's room
       socket.emit("room created", roomId);
     });
   }

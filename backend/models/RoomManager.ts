@@ -1,15 +1,16 @@
 import { getRandomRoomId } from "../utils/getRandom";
 import { Room } from "./Room";
+import { Host } from "@shared/models/Host";
 
 export class RoomManager {
   private rooms: Map<string, Room> = new Map();
 
-  addRoom(hostId: string): string {
+  addRoom(host: Host): string {
     let id: string;
     do {
       id = getRandomRoomId();
     } while (this.roomIdExists(id));
-    const room = new Room(id, hostId);
+    const room = new Room(id, host);
     this.rooms.set(id, room);
     return id;
   }
