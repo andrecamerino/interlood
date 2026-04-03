@@ -7,15 +7,7 @@ import {
   getHostPoints,
 } from "../logic/gameLogic";
 import { WavelengthCategory } from "../data/categories";
-
-enum WavelengthGamePhases {
-  WAITING = "WAITING",
-  SELECTING_WORD = "SELECTING WORD",
-  GUESSING_NUMBERS = "GUESSING NUMBERS",
-  REVEALING = "REVEALING",
-  SHOWING_LEADERBOARD = "SHOWING_LEADERBOARD",
-  FINISHED = "FINISHED",
-}
+import { WavelengthGamePhases} from "@shared/models/wavelength/WavelengthGamePhases"
 
 // TODO: Implement timer once connected web sockets
 export class WavelengthGame {
