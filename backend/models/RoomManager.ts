@@ -1,4 +1,4 @@
-import { getRandomRoomId } from "@/utils/getRandom";
+import { getRandomRoomId } from "../utils/getRandom";
 import { Room } from "./Room";
 
 export class RoomManager {
