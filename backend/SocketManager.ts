@@ -1,14 +1,14 @@
 import { Server, Socket } from "socket.io";
-import { Room } from "./models/Room";
 import { Player } from "@shared/models/Player";
+import { RoomManager } from "./models/RoomManager";
 
 export class SocketManager {
   private io: Server;
-  private room: Room;
+  private roomManager: RoomManager = new RoomManager();
+  private socketRoomMap: Map<string, string> = new Map(); // socketId → roomId
 
   constructor(io: Server) {
     this.io = io;
-    this.room = new Room("room-1", "host-1"); // hardcoded for MVP
     this.init();
   }
 
@@ -20,30 +20,52 @@ export class SocketManager {
   }
 
   private onConnection(socket: Socket) {
-    socket.on("disconnect", () => this.onDisconnect(socket));
-    socket.on("user join", (name: string) => this.onUserJoin(socket, name));
+    this.createRoom(socket);
+
+    socket.on("user join", (roomId: string, name: string) =>
+      this.joinRoom(socket, roomId, name),
+    );
+
+    socket.on("disconnect", () => {
+      const roomId = this.socketRoomMap.get(socket.id);
+      this.onDisconnect(socket, roomId);
+    });
   }
 
-  private onUserJoin(socket: Socket, name: string) {
+  private createRoom(socket: Socket) {
+    socket.on("create room", () => {
+      const roomId = this.roomManager.addRoom(socket.id);
+      socket.emit("room created", roomId);
+    });
+  }
+
+  private joinRoom(socket: Socket, roomId: string, name: string) {
     const player = new Player(socket.id, name);
-    const added = this.room.addPlayer(player);
+    const room = this.roomManager.getRoom(roomId);
+    if (!room) {
+      socket.emit("room error", "Room not found");
+      return;
+    }
+    const added = room.addPlayer(player);
 
     if (!added) {
       socket.emit("join error", "Name already taken");
       return;
     }
 
+    this.socketRoomMap.set(socket.id, roomId);
+    socket.join(roomId);
+
     console.log(`${name} joined the room`);
-    this.io.emit("room updated", this.room.toJSON());
+    this.io.to(roomId).emit("room updated", room.toJSON());
   }
 
-  private onDisconnect(socket: Socket) {
-    this.room.removePlayer(socket.id);
-    console.log("client disconnected:", socket.id);
-    this.io.emit("room updated", this.room.toJSON());
-  }
-
-  getRoom() {
-    return this.room;
+  private onDisconnect(socket: Socket, roomId: string | undefined) {
+    if (!roomId) return;
+    const room = this.roomManager.getRoom(roomId);
+    if (!room) return;
+    room.removePlayer(socket.id);
+    this.socketRoomMap.delete(socket.id);
+    this.io.to(roomId).emit("room updated", room.toJSON());
   }
 }
