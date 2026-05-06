@@ -1,6 +1,5 @@
 import { Player } from "@shared/models/Player";
 import { RoomPhase } from "../../shared/types/RoomPhase";
-import { GameType } from "@shared/types/GameType";
 import { Host } from "@shared/models/Host";
 
 export class Room {
@@ -28,9 +27,8 @@ export class Room {
     return true;
   }
 
-  selectGame(game: GameType) {
+  enterGameSelection() {
     this.phase = RoomPhase.SELECTING_GAME;
-    // TODO: return the right room type based on selection
   }
 
   isHost(id: string) {
