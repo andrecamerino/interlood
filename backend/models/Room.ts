@@ -49,11 +49,20 @@ export class Room {
     return this.host.getId();
   }
 
+  // Room.ts
   toJSON() {
     return {
       id: this.id,
       phase: this.phase,
+      hostId: this.host.getId(),
       players: this.players.map((p) => p.toJSON()),
     };
+  }
+
+  debug() {
+    console.log(`[Room ${this.id}]`);
+    console.log(`  Phase   :`, this.phase);
+    console.log(`  Host    :`, this.host.getId());
+    console.log(`  Players :`, this.players.map(p => p.getId()));
   }
 }

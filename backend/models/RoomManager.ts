@@ -29,4 +29,11 @@ export class RoomManager {
   roomIdExists(roomId: string) {
     return this.rooms.has(roomId);
   }
+
+  debug() {
+    console.log(`[RoomManager] ${this.rooms.size} room(s)`);
+    for (const room of this.rooms.values()) {
+      room.debug();
+    }
+  }
 }
