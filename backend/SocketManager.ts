@@ -37,9 +37,10 @@ export class SocketManager {
     socket.on("create room", () => {
       const host = new Host(socket.id);
       const roomId = this.roomManager.addRoom(host);
-      socket.join(roomId); // host joins the socket.io room too
-      this.socketRoomMap.set(socket.id, roomId); // track host's room
+      socket.join(roomId);
+      this.socketRoomMap.set(socket.id, roomId);
       socket.emit("room created", roomId);
+      socket.emit("room updated", this.roomManager.getRoom(roomId)!.toJSON()); // ← add this
     });
   }
 

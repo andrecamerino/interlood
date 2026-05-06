@@ -10,6 +10,8 @@ const CreateRoom = () => {
   const [roomCode, setRoomCode] = useState<string | null>(null); // seperate for now
   const [playerName, setPlayerName] = useState<string | null>(null);
   const [roomJoined, setRoomJoined] = useState<boolean>(false);
+  const [isHost, setIsHost] = useState(false);
+  const [players, setPlayers] = useState<{id: string, name: string}[]>([]);
 
   const handleCreate = () => {
     socket.emit("create room");
@@ -18,6 +20,9 @@ const CreateRoom = () => {
   useEffect(() => {
     socket.on("room created", (roomId: string) => {
       setRoomId(roomId);
+      setRoomCode(roomId);
+      setRoomJoined(true);
+      setIsHost(true); // ← track that this client is the host
     });
 
     return () => {
@@ -33,49 +38,41 @@ const CreateRoom = () => {
     socket.on("room updated", (room) => {
       setRoomId(room.id);
       setRoomJoined(true);
+      setPlayers(room.players); // ← store players
     });
+
+    return () => {
+      socket.off("room updated"); // ← add this
+    };
   }, []);
 
   return (
-    // TODO: use useRouter
     <div>
-      <div>
-        <h2>Join Room</h2>
-        {!roomJoined ? (
-          <div>
-            <input
-              type="text"
-              name="roomCode"
-              id="roomCode"
-              onChange={(e) => {
-                setRoomCode(e.target.value);
-              }}
-            />
-            {/* TODO: join room first then make player name */}
-            <input
-              type="text"
-              name="playerName"
-              id="playerName"
-              onChange={(e) => {
-                setPlayerName(e.target.value);
-              }}
-            />
-          </div>
-        ) : (
-          <p>Joined Room: {roomCode}</p>
-        )}
-      </div>
-      <button onClick={handleJoin}>Join Room</button>
-      <div className="flex flex-col gap-1">
-        <h2>Create Room</h2>
-        {roomId ? (
-          <h2>Room Code: {roomId}</h2>
-        ) : (
-          <button className="hover:underline" onClick={handleCreate}>
-            Create Room
-          </button>
-        )}
-      </div>
+      {!isHost && !roomJoined && (
+        <div>
+          <h2>Join Room</h2>
+          <input placeholder="Room code" onChange={(e) => setRoomCode(e.target.value)} />
+          <input placeholder="Your name" onChange={(e) => setPlayerName(e.target.value)} />
+          <button onClick={handleJoin}>Join Room</button>
+
+          <h2>Create Room</h2>
+          <button onClick={handleCreate}>Create Room</button>
+        </div>
+      )}
+
+      {isHost && <h2>Room Code: {roomId}</h2>}
+      {!isHost && roomJoined && <p>Joined Room: {roomCode}</p>}
+
+      {roomJoined && (
+        <div>
+          <h3>Players in room:</h3>
+          <ul>
+            {players.map((p) => (
+              <li key={p.id}>{p.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
