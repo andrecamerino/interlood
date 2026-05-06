@@ -15,8 +15,6 @@ const io = new Server(server, {
 
 new SocketManager(io);
 
-const socketManager = new SocketManager(io);
-
 app.get("/", (req, res) => {
   res.send(`
     <h1>Socket Connected on PORT: ${PORT}</h1>
