@@ -37,6 +37,7 @@ const CreateRoom = () => {
   }, []);
 
   return (
+    // TODO: use useRouter
     <div>
       <div>
         <h2>Join Room</h2>
