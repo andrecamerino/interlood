@@ -5,11 +5,12 @@ import { SocketManager } from "./SocketManager";
 
 const app = express();
 const server = createServer(app);
-const PORT = 3002;
+const PORT = Number(process.env.PORT ?? 3002);
+const CORS_ORIGIN = process.env.CORS_ORIGIN ?? "http://localhost:3000";
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // react frontend
+    origin: CORS_ORIGIN,
   },
 });
 
