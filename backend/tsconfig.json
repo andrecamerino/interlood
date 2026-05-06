@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["express"],
+    "paths": {
+      "@/*": ["./*"],
+      "@shared/*": ["../shared/*"],
+      "@frontend/*": ["../frontend/*"],
+    }
+  }
+}

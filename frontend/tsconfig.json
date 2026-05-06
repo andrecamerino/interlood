@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@shared/*": ["../shared/*"],
+      "@backend/*": ["../backend/*"],
     }
   },
   "include": [
@@ -29,6 +31,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "../backend/models/wavelength/WavelengthPlayer.ts", "../shared/models/Player.ts", "../backend/models/wavelength/WavelengthGame.ts", "../backend/logic/gameLogic.ts"  ],
   "exclude": ["node_modules"]
 }

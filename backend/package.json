@@ -1,0 +1,18 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "Interlood backend",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.22.1",
+    "socket.io": "^4.8.3"
+  },
+  "scripts": {
+    "dev": "tsx --tsconfig tsconfig.json -r tsconfig-paths/register index.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.21.0"
+  }
+}
