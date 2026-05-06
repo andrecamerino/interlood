@@ -17,14 +17,12 @@ interlood/
 │   │   ├── page.tsx          # Landing / lobby entry
 │   │   ├── layout.tsx
 │   │   ├── globals.css
-│   │   ├── room/
-│   │   │   ├── page.tsx
-│   │   │   └── [roomId]/page.tsx
+│   │   ├── room/[roomId]/page.tsx
 │   │   └── wavelength/
 │   │       ├── page.tsx
 │   │       └── ui/GameUI.tsx
-│   ├── components/           # JoinRoom, Room, ...
-│   ├── lib/socket.ts         # socket.io-client singleton
+│   ├── components/           # JoinRoom (handles both create + join)
+│   ├── lib/socket.ts         # socket.io-client singleton, env-driven URL
 │   └── next.config.ts
 │
 ├── backend/                  # Express + Socket.IO server (tsx)
@@ -42,6 +40,7 @@ interlood/
 │   ├── models/               # Player, Host, User
 │   └── types/                # GameType, RoomPhase, wavelength/*
 │
+├── .env.example              # Documents PORT, CORS_ORIGIN, NEXT_PUBLIC_SOCKET_URL
 ├── package.json              # Workspace root scripts
 ├── pnpm-workspace.yaml
 └── tsconfig.json             # Root paths config (@shared/*)
@@ -90,6 +89,7 @@ Do not commit directly to `staging` or `main`. Do not open PRs that target `main
 **Current Status**
 - Workspace + Next.js 16 / Express + Socket.IO scaffolding in place.
 - Basic room lifecycle wired: create room, join room by id, host/player model, broadcast `room updated`.
+- Foundation cleanup complete: env-driven socket config, single canonical join flow, Next.js 16 async params, double-instantiate bug fixed.
 - Wavelength stub exists (`backend/models/wavelength`, `frontend/app/wavelength`) — not yet playable end-to-end.
 
 **Immediate Todo**
@@ -109,13 +109,13 @@ Record decisions here when the reasoning isn't obvious from the code. Each entry
 - **2026-04 — Monorepo with `shared/` package, not duplicated types.** The same `Player`, `Host`, `RoomPhase`, and game-state shapes cross the socket boundary. A single source of truth (`@shared/*`) prevents client/server drift.
 - **2026-04 — Backend uses `tsx` directly instead of a build step.** The backend is small and iteration speed matters more than startup cost right now. Revisit if we need a real production deploy target.
 - **2026-04 — Socket.IO over plain WebSocket.** Rooms, broadcasts, and reconnection are first-class in Socket.IO and we'd otherwise rebuild them.
+- **2026-05 — Single root `.env.example`, no auto-loader on the backend.** Defaults in code (`process.env.X ?? "..."`) keep dev working with zero setup; the example file documents the three coupled vars (`PORT`, `CORS_ORIGIN`, `NEXT_PUBLIC_SOCKET_URL`). Next.js auto-loads `frontend/.env.local`; backend env vars are set via shell or process manager. Skipped `dotenv` to avoid a dep until there's a reason.
 
 ## Known Gotchas
 
-- **Next.js 16 has breaking changes vs. older training data.** APIs, conventions, and file structure may differ from what an LLM "knows." Before writing Next.js code, read the relevant guide in `node_modules/next/dist/docs/` and heed deprecation notices.
-- **Two Socket.IO servers are instantiated in `backend/index.ts`.** `new SocketManager(io)` is called twice — likely a bug. Fix before adding more socket handlers, otherwise events fire twice.
-- **Backend CORS is hard-coded to `http://localhost:3000`.** Anything other than the local frontend origin will be rejected. Make this env-driven before deploying.
-- **Backend port is hard-coded to `3002` and not env-driven.** Frontend `lib/socket.ts` must match.
+- **Next.js 16 has breaking changes vs. older training data.** APIs, conventions, and file structure may differ from what an LLM "knows." Before writing Next.js code, read the relevant guide in `node_modules/next/dist/docs/` and heed deprecation notices. In particular, `params` and `searchParams` are now `Promise`s — await them in server components, unwrap with `use()` in client components.
+- **Backend env vars don't auto-load from `.env`.** The dev script just runs `tsx`, no dotenv. Set `PORT` / `CORS_ORIGIN` in your shell or your process manager. Defaults work fine for local dev.
+- **The host isn't in `room.players`.** `Room.toJSON()` returns `{ hostId, players: [...] }` with the host stored separately. UI that only renders `players` will not show the room creator.
 - **`pnpm dev` runs frontend and backend with `&`**, not a proper process manager — output is interleaved and Ctrl-C may not kill both. Use two terminals if debugging.
 - **No tests yet.** Don't claim "verified" without manually running both servers and exercising the flow in the browser.
 
@@ -138,4 +138,16 @@ pnpm dev:backend
 pnpm build
 ```
 
-There is no `.env` schema yet — none of the current code reads from `process.env`. When the first env var is introduced, add a `.env.example` and document it in this section.
+### Environment variables
+
+Three coupled values are env-driven; sane localhost defaults mean dev works with zero setup. See `.env.example` for the canonical list.
+
+| Var | Used by | Default |
+|---|---|---|
+| `PORT` | backend | `3002` |
+| `CORS_ORIGIN` | backend | `http://localhost:3000` |
+| `NEXT_PUBLIC_SOCKET_URL` | frontend | `http://localhost:3002` |
+
+To override, copy values into:
+- `frontend/.env.local` for `NEXT_PUBLIC_*` (Next.js auto-loads it)
+- Your shell (or process manager) for backend vars

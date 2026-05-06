@@ -4,9 +4,9 @@ import { getSocket } from "@/lib/socket";
 
 const socket = getSocket();
 
-const CreateRoom = () => {
+const JoinRoom = () => {
   const [roomId, setRoomId] = useState<string | null>(null);
-  // TODO: seperate join and create room components
+  // TODO: separate join and create room components
   const [roomCode, setRoomCode] = useState<string | null>(null); // seperate for now
   const [playerName, setPlayerName] = useState<string | null>(null);
   const [roomJoined, setRoomJoined] = useState<boolean>(false);
@@ -77,4 +77,4 @@ const CreateRoom = () => {
   );
 };
 
-export default CreateRoom;
+export default JoinRoom;

@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Player } from "@shared/types/Player";
 import { getSocket } from "@/lib/socket";
 
 const socket = getSocket();
 
-export const Page = ({ params }: { params: { roomId: string } }) => {
-  const { roomId } = params;
+export const Page = ({ params }: { params: Promise<{ roomId: string }> }) => {
+  const { roomId } = use(params);
   const [players, setPlayers] = useState<Player[]>([]); // TODO: dont use Player class on frontend, should use Player interface from /shared
 
   useEffect(() => {
